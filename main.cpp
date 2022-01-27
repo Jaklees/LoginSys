@@ -14,7 +14,7 @@ int main() {
 	std::string user, password, u1, p1, p2,temp; // user = username on file, password = pass on file
 	// u1 = inputted username, p1 = inputted password, p2 = confirmed password
 	std::fstream fs;
-	fs.open("login.txt", std::ios::out | std::ios::in | std::ios::app);
+	fs.open("loginSystem.txt", std::ios::out | std::ios::in | std::ios::app);
 
 	std::cout << "Hello, welcome to LogX" << std::endl;
 	std::cout << "Would you like to a) Login or b) Register?" << std::endl;
