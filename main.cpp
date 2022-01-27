@@ -2,8 +2,8 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <sstream>
 
-// I want to create a login system... there will be a file that is read and editted where a line saves the username and password
 // 1) First, option comes up asking if user wants to login or register
 // 2) If user chooses login, then it will prompt for username and then for password and will check this by searching for the username and checking to see if that password matches provided
 // 3) say "Invalid Information given, attempt 1 of 3" then give options a,b,c: a) retry? b) register? c) forgot password?
@@ -11,15 +11,19 @@
 // if confirmed pass and pass arent same, give error and then a) try again? b) quit
 
 int main() {
-	std::string user, password, u1, p1, p2,temp; // user = username on file, password = pass on file
+	std::string user, password, u1, p1, p2,temp;
+	std::string hold = " ";
+
+	// user = username on file, password = pass on file
 	// u1 = inputted username, p1 = inputted password, p2 = confirmed password
 	std::fstream fs;
-	fs.open("loginSystem.txt", std::ios::out | std::ios::in | std::ios::app);
+	fs.open("loginSys.txt", std::ios::app);
 
 	std::cout << "Hello, welcome to LogX" << std::endl;
 	std::cout << "Would you like to a) Login or b) Register?" << std::endl;
 	std::cout << "Please enter a or b for option selection" << std::endl;
 	std::getline(std::cin, temp);
+
 
 	if (temp == "a") {
 		std::cout << "You selected login" << std::endl;
@@ -29,17 +33,39 @@ int main() {
 		std::cout << "Please enter your password" << std::endl;
 		std::getline(std::cin, p1);
 
-		std::string hold;
-		std::map<std::string, std::string> userpass;
-		std::map<std::string, std::string>::iterator it;
 		while (std::getline(fs, hold)) {
-			userpass.insert(std::make_pair(hold.substr(0, hold.find(';')), hold.substr(hold.find(';') + 1)));
-			hold.clear();
-		}
-		if (userpass.find(u1) != userpass.end()) {
+			std::stringstream ss(hold);
+			ss >> user >> password;
 
+			if (u1 == user && p1 == password) {
+				std::cout << "Login Successful" << std::endl;
+				exit(0);
+			}
 		}
+		std::cout << "Invalid Username or Password... Exiting" << std::endl;
 	}
-
+	else {
+		std::cout << "You selected to create an account" << std::endl;
+		std::cout << "Please enter desired username" << std::endl;
+		std::cin >> u1;
+		
+		while (std::getline(fs, hold)) {
+			std::stringstream ss(hold);
+			ss >> user >> password;
+			if (u1 == user) {
+				std::cout << "Username is already in user... Exiting" << std::endl;
+				exit(0);
+			}
+			else {
+				std::cout << "Username accepted" << std::endl;
+				break;
+			}
+		}
+		std::cout << "Please enter desired password" << std::endl;
+		std::cin >> p1;
+		fs << u1 << p1 << std::endl;
+		std::cout << "Account created" << std::endl;
+	}
+	fs.close();
 	return 0;
 }
